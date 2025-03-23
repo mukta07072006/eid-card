@@ -4,13 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eid Mubarak!</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Georgia', serif;
             text-align: center;
             background-color: #FFFFFF; /* White background */
-            color: #4E4E4E; /* Soft gray for text */
+            color: #4E4E4E; /* Soft gray text */
             padding: 20px;
         }
         h1 {
@@ -35,11 +34,83 @@
         .button:hover {
             background-color: #B8860B; /* Dark gold on hover */
         }
+        .payment-details {
+            display: none;
+            margin-top: 20px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            width: 80%;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #ff4444; /* Red background */
+            color: white;
+            text-align: center;
+            border-radius: 5px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .toast.show {
+            visibility: visible;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+        @keyframes fadein {
+            from { bottom: 0; opacity: 0; }
+            to { bottom: 30px; opacity: 1; }
+        }
+        @keyframes fadeout {
+            from { bottom: 30px; opacity: 1; }
+            to { bottom: 0; opacity: 0; }
+        }
     </style>
 </head>
 <body>
     <h1>Eid al-Fitr: A Time for Gratitude</h1>
 <p>As we bid farewell to Ramadan, let’s carry its lessons of patience, gratitude, and compassion into the rest of the year. Eid Mubarak! <br>
 <br><br><br><br>Your well-wisher<br>MUKTADIR</p>
+    <button onclick="showPaymentDetails()" class="button">Get Salami</button>
+    <div id="paymentDetails" class="payment-details">
+        <p>Enter your Bkash/Nagad account number:</p>
+        <input type="text" id="accountNumber" placeholder="01XXXXXXXXX" maxlength="11">
+        <br>
+        <button onclick="validateAccount()" class="button">Submit</button>
+    </div>
+
+    <!-- Toast Message -->
+    <div id="toast" class="toast">Please enter a valid Bkash/Nagad account number (11 digits, starting with 01).</div>
+
+    <script>
+        function showPaymentDetails() {
+            document.getElementById("paymentDetails").style.display = "block";
+        }
+
+        function validateAccount() {
+            const accountNumber = document.getElementById("accountNumber").value;
+
+            // Check if account number starts with 01 and is 11 digits long
+            if (accountNumber.startsWith("01") && accountNumber.length === 11) {
+                document.getElementById("bankDetails").style.display = "block";
+            } else {
+                showToast();
+            }
+        }
+
+        function showToast() {
+            const toast = document.getElementById("toast");
+            toast.classList.add("show");
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 3000);
+        }
+    </script>
 </body>
 </html>
