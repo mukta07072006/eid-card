@@ -89,6 +89,10 @@
     <div id="toast" class="toast">Please enter a valid Bkash/Nagad account number (11 digits, starting with 01).</div>
 
     <script>
+         function showPaymentDetails() {
+            document.getElementById("paymentDetails").style.display = "block";
+        }
+
         function validateAccount() {
     const accountNumber = document.getElementById("accountNumber").value;
 
