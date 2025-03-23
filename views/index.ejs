@@ -89,28 +89,21 @@
     <div id="toast" class="toast">Please enter a valid Bkash/Nagad account number (11 digits, starting with 01).</div>
 
     <script>
-        function showPaymentDetails() {
-            document.getElementById("paymentDetails").style.display = "block";
-        }
-
         function validateAccount() {
-            const accountNumber = document.getElementById("accountNumber").value;
+    const accountNumber = document.getElementById("accountNumber").value;
 
-            // Check if account number starts with 01 and is 11 digits long
-            if (accountNumber.startsWith("01") && accountNumber.length === 11) {
-                document.getElementById("bankDetails").style.display = "block";
-            } else {
-                showToast();
-            }
-        }
+    // Check if account number starts with 01 and is 11 digits long
+    if (accountNumber.startsWith("01") && accountNumber.length === 11) {
+        document.getElementById("bankDetails").style.display = "block";
 
-        function showToast() {
-            const toast = document.getElementById("toast");
-            toast.classList.add("show");
-            setTimeout(() => {
-                toast.classList.remove("show");
-            }, 3000);
-        }
-    </script>
-</body>
-</html>
+        // Trigger the download of the Salami Cheque
+        const link = document.createElement("a");
+        link.href = "/salami_cheque.pdf"; // Path to your cheque file
+        link.download = "salami_cheque.pdf"; // Name of the downloaded file
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    } else {
+        showToast();
+    }
+}
