@@ -15,8 +15,9 @@ const express = require('express');
    app.set('views', './views');
 
    // Google Sheets setup
-   const SHEET_ID = '1h3_UWha-K_kJzsrBIsrGHIwJ-Md4WEVaZnbFE37n5Dk'; // Replace with your Google Sheet ID
-   const CREDENTIALS = require('./credentials.json'); // Download from Google Cloud Console
+     const CREDENTIALS = JSON.parse(process.env.GOOGLE_SHEETS_CREDENTIALS);
+     const SHEET_ID = process.env.1h3_UWha-K_kJzsrBIsrGHIwJ-Md4WEVaZnbFE37n5Dk;
+    // Download from Google Cloud Console
 
    // Route to handle form submission
    app.post('/submit', async (req, res) => {
