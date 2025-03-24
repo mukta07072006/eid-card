@@ -1,67 +1,29 @@
-const express = require('express');
-const { GoogleSpreadsheet } = require('google-spreadsheet');
-const app = express();
-const PORT = process.env.PORT || 3000;
+  const express = require('express');
+   const path = require('path');
 
-// Middleware to parse JSON and form data
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+   const app = express();
+   const PORT = 3000;
 
-// Serve static files
-app.use(express.static('public'));
+   // Set up EJS as the view engine
+   app.set('view engine', 'ejs');
+   app.set('views', path.join(__dirname, 'views'));
 
-// Set up EJS as the view engine
-app.set('view engine', 'ejs');
-app.set('views', './views');
+   // Serve static files (images, CSS, etc.)
+   app.use(express.static(path.join(__dirname, 'public')));
 
-// Google Sheets setup
-const CREDENTIALS = JSON.parse(process.env.GOOGLE_SHEETS_CREDENTIALS);
-const SHEET_ID = process.env.GOOGLE_SHEET_ID;
+   // Homepage
+   app.get('/', (req, res) => {
+       res.render('index');
+   });
 
-// Route to handle form submission
-app.post('/submit', async (req, res) => {
-    const { name, accountNumber } = req.body;
+   // Dynamic routes for each person
+   app.get('/:name', (req, res) => {
+       const name = req.params.name;
+       const imagePath = `/images/${name}.jpg`; // Assumes image names match>
+       res.render('card', { name, imagePath });
+   });
 
-    try {
-        // Load the Google Sheet
-        const doc = new GoogleSpreadsheet(SHEET_ID);
-        await doc.useServiceAccountAuth(CREDENTIALS);
-        await doc.loadInfo();
-
-        // Get the first sheet
-        const sheet = doc.sheetsByIndex[0];
-
-        // Add a new row with the submission data
-        await sheet.addRow({
-            Timestamp: new Date().toLocaleString(),
-            Name: name,
-            'Account Number': accountNumber,
-        });
-
-        res.status(200).send('Submission successful!');
-    } catch (error) {
-        console.error('Error submitting data:', error);
-        res.status(500).send('Submission failed. Please try again.');
-    }
-});
-
-// Homepage route
-app.get('/', (req, res) => {
-    res.render('index');
-});
-const path = require('path');
-
-// Set up EJS as the view engine
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views')); // Ensure the path is correct
-// Card page route
-app.get('/:name', (req, res) => {
-    const name = req.params.name;
-    const imagePath = `/images/${name}.jpg`;
-    res.render('card', { name, imagePath });
-});
-
-// Start the server
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-});
+   // Start the server
+   app.listen(PORT, () => {
+       console.log(`Server is running on http://localhost:${PORT}`);
+   });
