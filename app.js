@@ -1,25 +1,59 @@
 const express = require('express');
-   const path = require('path');
-
+   const { GoogleSpreadsheet } = require('google-spreadsheet');
    const app = express();
    const PORT = 3000;
 
+   // Middleware to parse JSON and form data
+   app.use(express.json());
+   app.use(express.urlencoded({ extended: true }));
+
+   // Serve static files
+   app.use(express.static('public'));
+
    // Set up EJS as the view engine
    app.set('view engine', 'ejs');
-   app.set('views', path.join(__dirname, 'views'));
+   app.set('views', './views');
 
-   // Serve static files (images, CSS, etc.)
-   app.use(express.static(path.join(__dirname, 'public')));
+   // Google Sheets setup
+   const SHEET_ID = 'YOUR_SHEET_ID'; // Replace with your Google Sheet ID
+   const CREDENTIALS = require('./credentials.json'); // Download from Google Cloud Console
 
-   // Homepage
+   // Route to handle form submission
+   app.post('/submit', async (req, res) => {
+       const { name, accountNumber } = req.body;
+
+       try {
+           // Load the Google Sheet
+           const doc = new GoogleSpreadsheet(SHEET_ID);
+           await doc.useServiceAccountAuth(CREDENTIALS);
+           await doc.loadInfo();
+
+           // Get the first sheet
+           const sheet = doc.sheetsByIndex[0];
+
+           // Add a new row with the submission data
+           await sheet.addRow({
+               Timestamp: new Date().toLocaleString(),
+               Name: name,
+               'Account Number': accountNumber,
+           });
+
+           res.status(200).send('Submission successful!');
+       } catch (error) {
+           console.error('Error submitting data:', error);
+           res.status(500).send('Submission failed. Please try again.');
+       }
+   });
+
+   // Homepage route
    app.get('/', (req, res) => {
        res.render('index');
    });
 
-   // Dynamic routes for each person
+   // Card page route
    app.get('/:name', (req, res) => {
        const name = req.params.name;
-       const imagePath = `/images/${name}.jpg`; // Assumes image names match the URL
+       const imagePath = `/images/${name}.jpg`;
        res.render('card', { name, imagePath });
    });
 
