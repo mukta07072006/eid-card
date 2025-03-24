@@ -49,7 +49,11 @@ app.post('/submit', async (req, res) => {
 app.get('/', (req, res) => {
     res.render('index');
 });
+const path = require('path');
 
+// Set up EJS as the view engine
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views')); // Ensure the path is correct
 // Card page route
 app.get('/:name', (req, res) => {
     const name = req.params.name;
