@@ -49,7 +49,7 @@
         .toast {
             visibility: hidden;
             min-width: 250px;
-            background-color: #ff4444; /* Red background */
+            background-color: #4CAF50; /* Green background for success */
             color: white;
             text-align: center;
             border-radius: 5px;
@@ -75,18 +75,21 @@
     </style>
 </head>
 <body>
-    <h1>Eid Mobarak ✨🌟</h1>
-    <p>May this Eid bring joy, peace, and countless blessings to you and your loved ones. <br><br>Your well-wisher, <br> MUKTADIR.</p>
+    <h1>Eid Mubarak 🌟</h1>
+    <p>May this Eid bring joy, peace, and countless blessings to you and your loved ones. <br><br>Your well-wisher, <br>MUKTADIR.</p>
     <button onclick="showPaymentDetails()" class="button">Get Salami</button>
     <div id="paymentDetails" class="payment-details">
+        <p>Enter your name:</p>
+        <input type="text" id="name" placeholder="Your Name">
         <p>Enter your Bkash/Nagad account number:</p>
         <input type="text" id="accountNumber" placeholder="01XXXXXXXXX" maxlength="11">
         <br>
         <button onclick="validateAccount()" class="button">Submit</button>
     </div>
 
-    <!-- Toast Message -->
-    <div id="toast" class="toast">Please enter a valid Bkash/Nagad account number (11 digits, starting with 01).</div>
+    <!-- Toast Messages -->
+    <div id="errorToast" class="toast">Please enter a valid Bkash/Nagad account number (11 digits, starting with 01).</div>
+    <div id="successToast" class="toast">You will receive your Salami shortly.</div>
 
     <script>
         function showPaymentDetails() {
@@ -94,26 +97,29 @@
         }
 
         function validateAccount() {
+            const name = document.getElementById("name").value.trim();
             const accountNumber = document.getElementById("accountNumber").value;
 
-            // Check if account number starts with 01 and is 11 digits long
-            if (accountNumber.startsWith("01") && accountNumber.length === 11) {
-                document.getElementById("bankDetails").style.display = "block";
-
+            // Check if name is provided and account number is valid
+            if (name && accountNumber.startsWith("01") && accountNumber.length === 11) {
                 // Trigger the download of the Salami Cheque
                 const link = document.createElement("a");
-                link.href = "/Salami_Cheque.jpg"; // Path to your cheque file
-                link.download = "Salami_Cheque.jpg"; // Name of the downloaded file
+                link.href = "/salami_cheque.jpg"; // Path to your cheque file
+                link.download = `Salami_Cheque_${name}.jpg`; // Dynamic file name
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
+
+                // Show success toast
+                showToast("successToast");
             } else {
-                showToast();
+                // Show error toast
+                showToast("errorToast");
             }
         }
 
-        function showToast() {
-            const toast = document.getElementById("toast");
+        function showToast(toastId) {
+            const toast = document.getElementById(toastId);
             toast.classList.add("show");
             setTimeout(() => {
                 toast.classList.remove("show");
