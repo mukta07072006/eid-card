@@ -80,7 +80,7 @@
         <br><br>
         <button onclick="showPaymentDetails()">Salami</button>
         <div id="paymentDetails" class="payment-details">
-            <input type="number" id="amount" placeholder="Amount in BDT" min="200">
+            <input type="number" id="amount" placeholder="Amount in BDT" min="150">
             <br>
             <button onclick="showBankDetails()">Submit</button>
             <div id="bankDetails" style="display: none; margin-top: 20px;">
@@ -93,7 +93,7 @@
     </div>
 
     <!-- Toast Message -->
-    <div id="toast" class="toast">Please enter at least 200 BDT.</div>
+    <div id="toast" class="toast">Please enter at least 150 BDT.</div>
 
     <script>
         function showPaymentDetails() {
@@ -102,7 +102,7 @@
 
         function showBankDetails() {
             const amount = document.getElementById("amount").value;
-            if (amount && amount >= 200) {
+            if (amount && amount >= 150) {
                 document.getElementById("bankDetails").style.display = "block";
             } else {
                 showToast();
