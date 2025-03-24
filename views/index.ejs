@@ -6,17 +6,17 @@
     <title>Eid Mubarak!</title>
     <style>
         body {
-    background-image: url('background.jpg'); /* Make sure the path is correct */
-    background-size: 150px auto; /* or 'cover' depending on your preference */
-    background-repeat: no-repeat;
-    background-position: right bottom 50px; /* Adjust position as needed */
+            background-image: url('background.jpg');
+            background-size: 150px auto;
+            background-repeat: no-repeat;
+            background-position: right bottom 50px;
             font-family: 'Georgia', serif;
             text-align: center;
-            color: #4E4E4E; /* Soft gray text */
+            color: #4E4E4E;
             padding: 40px;
         }
         h1 {
-            color: #1C92FB; /* Vibrant blue for headings */
+            color: #1C92FB;
             font-size: 2.5rem;
             margin-bottom: 20px;
         }
@@ -25,22 +25,22 @@
             line-height: 1.6;
         }
         img {
-height: 300;
-width: 300;
-}
+            height: 300px;
+            width: 300px;
+        }
         .button {
             display: inline-block;
             padding: 10px 20px;
-            background-color: #1C92FB; /* Vibrant blue to match your theme */
-            color: #FFF; /* White text */
+            background-color: #1C92FB;
+            color: #FFF;
             text-decoration: none;
             border-radius: 5px;
             margin-top: 20px;
             font-size: 1rem;
-            transition: background-color 0.3s ease; /* Smooth hover effect */
+            transition: background-color 0.3s ease;
         }
         .button:hover {
-            background-color: #0B6DBF; /* Darker blue on hover */
+            background-color: #0B6DBF;
         }
         .payment-details {
             display: none;
@@ -56,7 +56,7 @@ width: 300;
         .toast {
             visibility: hidden;
             min-width: 250px;
-            background-color: #4CAF50; /* Green background for success */
+            background-color: #4CAF50;
             color: white;
             text-align: center;
             border-radius: 5px;
@@ -82,17 +82,24 @@ width: 300;
     </style>
 </head>
 <body background="background.jpg">
-    <h1>Eid Mubarak from MUKTADIR!</h1>
-    <p>May this Eid bring joy, peace, and countless blessings to you and your loved ones. <br><br>Your well-wisher,<br><b> MUKTADIR.</p>
+    <h1>Eid Mubarak ✨🌟</h1>
+    <p>May this Eid bring joy, peace, and countless blessings to you and your loved ones. <br><br>Your well-wisher,<br><b> MUKTADIR.</b></p>
     <button onclick="showPaymentDetails()" class="button">Get Salami</button>
+    
     <div id="paymentDetails" class="payment-details">
         <p>Enter your Bkash/Nagad account number:</p>
-        <input type="text" id="accountNumber" placeholder="01XXXXXXXXX" maxlength="11">
-        <br>
-        <button onclick="validateAccount()" class="button">Submit</button>
+        <!-- FormSubmit.co Form -->
+        <form action="https://formsubmit.co/m.muktadir.official@gmail.com" method="POST">
+            <input type="hidden" name="_subject" value="New Salami Request">
+            <input type="hidden" name="_template" value="table">
+            <input type="text" name="account_number" id="accountNumber" 
+            <input type="hidden" name="_captcha" value="true">
+            <input type="hidden" name="_autoresponse" value="You already received Salami!">
+                   placeholder="01XXXXXXXXX" maxlength="11" required>
+            <br>
+            <button type="submit" class="button">Submit</button>
+        </form>
     </div>
-<div>
-</div>
 
     <!-- Toast Messages -->
     <div id="errorToast" class="toast">Please enter a valid Bkash/Nagad account number (11 digits, starting with 01).</div>
@@ -103,26 +110,24 @@ width: 300;
             document.getElementById("paymentDetails").style.display = "block";
         }
 
-        function validateAccount() {
+        // Optional: Add validation before FormSubmit sends data
+        document.querySelector("form").addEventListener("submit", function(e) {
             const accountNumber = document.getElementById("accountNumber").value;
-
-            // Check if name is provided and account number is valid
-            if (accountNumber.startsWith("01") && accountNumber.length === 11) {
-                // Trigger the download of the Salami Cheque
+            
+            if (!accountNumber.startsWith("01") || accountNumber.length !== 11) {
+                e.preventDefault(); // Stop form submission
+                showToast("errorToast");
+            } else {
+                showToast("successToast");
+                // Optional: Trigger cheque download after successful validation
                 const link = document.createElement("a");
-                link.href = "/Salami_Cheque.jpg"; // Path to your cheque file
-                link.download = `Salami_Cheque_${name}.jpg`; // Dynamic file name
+                link.href = "/Salami_Cheque.jpg";
+                link.download = `Salami_Cheque_${accountNumber}.jpg`;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
-
-                // Show success toast
-                showToast("successToast");
-            } else {
-                // Show error toast
-                showToast("errorToast");
             }
-        }
+        });
 
         function showToast(toastId) {
             const toast = document.getElementById(toastId);
