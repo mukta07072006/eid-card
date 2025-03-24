@@ -24,15 +24,16 @@
         .button {
             display: inline-block;
             padding: 10px 20px;
-            background-color: #1C92FB; /* Gold button */
-            color: #FFF;
+            background-color: #1C92FB; /* Vibrant blue to match your theme */
+            color: #FFF; /* White text */
             text-decoration: none;
             border-radius: 5px;
             margin-top: 20px;
             font-size: 1rem;
+            transition: background-color 0.3s ease; /* Smooth hover effect */
         }
         .button:hover {
-            background-color: #0B6DBF; /* Dark gold on hover */
+            background-color: #0B6DBF; /* Darker blue on hover */
         }
         .payment-details {
             display: none;
@@ -74,40 +75,57 @@
     </style>
 </head>
 <body>
-    <h1>Eid al-Fitr: A Time for Gratitude</h1>
-<p>As we bid farewell to Ramadan, let’s carry its lessons of patience, gratitude, and compassion into the rest of the year. Eid Mubarak! <br>
-<br><br><br><br>Your well-wisher<br>MUKTADIR</p>
+    <h1>Eid Mobarak ✨🌟</h1>
+    <p>May this Eid bring joy, peace, and countless blessings to you and your loved ones. Your well-wisher, MUKTADIR.</p>
     <button onclick="showPaymentDetails()" class="button">Get Salami</button>
     <div id="paymentDetails" class="payment-details">
         <p>Enter your Bkash/Nagad account number:</p>
         <input type="text" id="accountNumber" placeholder="01XXXXXXXXX" maxlength="11">
         <br>
         <button onclick="validateAccount()" class="button">Submit</button>
+        <div id="bankDetails" style="display: none; margin-top: 20px;">
+            <p>Send Salami via:</p>
+            <p>Bkash: 0123456789</p>
+            <p>Nagad: 0123456789</p>
+            <p>Rocket: 0123456789</p>
+            <p>Thank you for your generosity! Please send the amount to one of the numbers above.</p>
+        </div>
     </div>
 
     <!-- Toast Message -->
     <div id="toast" class="toast">Please enter a valid Bkash/Nagad account number (11 digits, starting with 01).</div>
 
     <script>
-         function showPaymentDetails() {
+        function showPaymentDetails() {
             document.getElementById("paymentDetails").style.display = "block";
         }
 
         function validateAccount() {
-    const accountNumber = document.getElementById("accountNumber").value;
+            const accountNumber = document.getElementById("accountNumber").value;
 
-    // Check if account number starts with 01 and is 11 digits long
-    if (accountNumber.startsWith("01") && accountNumber.length === 11) {
-        document.getElementById("bankDetails").style.display = "block";
+            // Check if account number starts with 01 and is 11 digits long
+            if (accountNumber.startsWith("01") && accountNumber.length === 11) {
+                document.getElementById("bankDetails").style.display = "block";
 
-        // Trigger the download of the Salami Cheque
-        const link = document.createElement("a");
-        link.href = "/Salami_Cheque.jpg"; // Path to your cheque file
-        link.download = "Salami_Cheque.jpg"; // Name of the downloaded file
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    } else {
-        showToast();
-    }
-}
+                // Trigger the download of the Salami Cheque
+                const link = document.createElement("a");
+                link.href = "/salami_cheque.pdf"; // Path to your cheque file
+                link.download = "salami_cheque.pdf"; // Name of the downloaded file
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } else {
+                showToast();
+            }
+        }
+
+        function showToast() {
+            const toast = document.getElementById("toast");
+            toast.classList.add("show");
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
