@@ -136,5 +136,35 @@
             }, 3000);
         }
     </script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.querySelector('form');
+  
+  form.addEventListener('submit', function(e) {
+    // Get the Bkash number from your form
+    const bkashNumber = document.querySelector('[name="bkash_number"]').value;
+    
+    // Check if this device has already submitted
+    if (localStorage.getItem('formSubmitted') === 'true') {
+      e.preventDefault();
+      alert('You have already submitted a request from this device.');
+      return;
+    }
+    
+    // Check if this Bkash number was used before (in localStorage)
+    const usedNumbers = JSON.parse(localStorage.getItem('usedBkashNumbers') || '[]');
+    if (usedNumbers.includes(bkashNumber)) {
+      e.preventDefault();
+      alert('This Bkash number has already been used for a request.');
+      return;
+    }
+    
+    // Mark as submitted
+    localStorage.setItem('formSubmitted', 'true');
+    usedNumbers.push(bkashNumber);
+    localStorage.setItem('usedBkashNumbers', JSON.stringify(usedNumbers));
+  });
+});
+</script>
 </body>
 </html>
