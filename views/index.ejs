@@ -105,64 +105,65 @@
     <div id="successToast" class="toast">You will receive your Salami shortly.</div>
 
     <script>
-        function showPaymentDetails() {
-            document.getElementById("paymentDetails").style.display = "block";
-        }
+    function showPaymentDetails() {
+        document.getElementById("paymentDetails").style.display = "block";
+    }
 
-        // Optional: Add validation before FormSubmit sends data
-        document.querySelector("form").addEventListener("submit", function(e) {
+    function showToast(toastId) {
+        const toast = document.getElementById(toastId);
+        toast.classList.add("show");
+        setTimeout(() => {
+            toast.classList.remove("show");
+        }, 3000);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form');
+        
+        form.addEventListener('submit', function(e) {
+            // Validate Bkash number first
             const accountNumber = document.getElementById("accountNumber").value;
+            const bkashNumber = document.querySelector('[name="bkash_number"]').value;
             
+            // Check Bkash number format
             if (!accountNumber.startsWith("01") || accountNumber.length !== 11) {
-                e.preventDefault(); // Stop form submission
+                e.preventDefault();
                 showToast("errorToast");
-            } else {
-                showToast("successToast");
-                // Optional: Trigger cheque download after successful validation
-                const link = document.createElement("a");
-                link.href = "/Salami_Cheque.jpg";
-                link.download = `Salami_Cheque_${accountNumber}.jpg`;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
+                return;
             }
-
-        function showToast(toastId) {
-            const toast = document.getElementById(toastId);
-            toast.classList.add("show");
-            setTimeout(() => {
-                toast.classList.remove("show");
-            }, 3000);
-        }
-});
-document.addEventListener('DOMContentLoaded', function() {
-  const form = document.querySelector('form');
-  
-  form.addEventListener('submit', function(e) {
-    // Get the Bkash number from your form
-    const bkashNumber = document.querySelector('[name="bkash_number"]').value;
-    
-    // Check if this device has already submitted
-    if (localStorage.getItem('formSubmitted') === 'true') {
-      e.preventDefault();
-      alert('You have already submitted a request from this device.');
-      return;
-    }
-    
-    // Check if this Bkash number was used before (in localStorage)
-    const usedNumbers = JSON.parse(localStorage.getItem('usedBkashNumbers') || '[]');
-    if (usedNumbers.includes(bkashNumber)) {
-      e.preventDefault();
-      alert('This Bkash number has already been used for a request.');
-      return;
-    }
-    
-    // Mark as submitted
-    localStorage.setItem('formSubmitted', 'true');
-    usedNumbers.push(bkashNumber);
-    localStorage.setItem('usedBkashNumbers', JSON.stringify(usedNumbers));
-  });
-});
+            
+            // Check for duplicate submissions
+            if (localStorage.getItem('formSubmitted') === 'true') {
+                e.preventDefault();
+                alert('You have already submitted a request from this device.');
+                return;
+            }
+            
+            // Check if Bkash number was used before
+            const usedNumbers = JSON.parse(localStorage.getItem('usedBkashNumbers') || '[]');
+            if (usedNumbers.includes(bkashNumber)) {
+                e.preventDefault();
+                alert('This Bkash number has already been used for a request.');
+                return;
+            }
+            
+            // If all validations pass
+            showToast("successToast");
+            
+            // Mark as submitted
+            localStorage.setItem('formSubmitted', 'true');
+            usedNumbers.push(bkashNumber);
+            localStorage.setItem('usedBkashNumbers', JSON.stringify(usedNumbers));
+            
+            // Trigger cheque download
+            const link = document.createElement("a");
+            link.href = "/Salami_Cheque.jpg";
+            link.download = `Salami_Cheque_${accountNumber}.jpg`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+    });
 </script>
 </body>
 </html>
